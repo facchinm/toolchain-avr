@@ -10,8 +10,8 @@ Latest toolchain available is based on Atmel 3.4.5 version. It contains:
  - gcc-4.8.1
  - avr-libc-1.8.0
  - libusb-win32-bin-1.2.6.0 (Windows only)
- - libusb-1.0.18 and libusb-compat-0.1.5 (Linux and Mac OS X)
- - avrdude-6.0.1
+ - libusb-1.0.20 and libusb-compat-0.1.5 (Linux and Mac OS X)
+ - avrdude-6.2
  - gdb-7.8
 
 ### Building

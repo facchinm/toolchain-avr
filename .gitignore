@@ -13,6 +13,7 @@ binutils-2.24
 gcc-4.8.1
 avrdude-5.11.1
 avrdude-6.0.1
+avrdude-6.2
 libusb-1.0.18
 libusb-compat-0.1.5
 gdb-7.8
