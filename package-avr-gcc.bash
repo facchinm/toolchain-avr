@@ -81,6 +81,50 @@ rm -rf toolsdir objdir *-build
 
 rm -rf objdir/{info,man,share}
 
+#add extra files from atpack (only use the neede ones
+mkdir -p atpack
+cd atpack
+rm -rf *
+if [[ ! -f *.atpack ]] ;
+then
+        wget ${ATMEL_ATMEGA_PACK_URL}
+fi
+
+mv ${ATMEL_ATMEGA_PACK_FILENAME}.atpack ${ATMEL_ATMEGA_PACK_FILENAME}.zip
+unzip ${ATMEL_ATMEGA_PACK_FILENAME}.zip
+
+#copy relevant files to the right folders
+# 1- copy includes definitions
+EXTRA_INCLUDES=`diff -q ../objdir/avr/include/avr ../atpack/include/avr | grep "Only in" | grep atpack | cut -f4 -d" "`
+for x in $EXTRA_INCLUDES; do
+cp include/avr/$x ../objdir/avr/include/avr
+done
+
+# 2 - compact specs into a single folder
+SPECS_FOLDERS=`ls gcc/dev`
+mkdir temp
+for folder in $SPECS_FOLDERS; do
+cp -r gcc/dev/i${folder}/* temp/
+done
+
+# 3 - find different files (device-specs)
+EXTRA_SPECS=`diff -q ../objdir/lib/gcc/avr/${GCC_VERSION}/device-specs/ temp/device-specs | grep "Only in" | grep temp | cut -f4 -d" "`
+for x in $EXTRA_SPECS; do
+cp temp/device-specs/${x} ../objdir/lib/gcc/avr/${GCC_VERSION}/device-specs/
+done
+
+rm -rf temp/device-specs
+
+EXTRA_LIBS=`diff -q ../objdir/avr/lib temp/ | grep "Only in" | grep temp | cut -f4 -d" "`
+for x in $EXTRA_LIBS; do
+cp -r temp/${x} ../objdir/avr/lib/${x}
+done
+
+# 4 - extract the correct includes and add them to io.h 
+# ARGH! difficult!
+
+cd ..
+
 # if producing a windows build, compress as zip and
 # copy *toolchain-precompiled* content to any folder containing a .exe
 if [[ ${OUTPUT_TAG} == *"mingw"* ]] ; then
