@@ -81,14 +81,12 @@ rm -rf toolsdir objdir *-build
 
 rm -rf objdir/{info,man,share}
 
-#add extra files from atpack (only use the neede ones
+if [[ -f *.atpack ]] ; then
+#add extra files from atpack (only if the package is altrady there)
 mkdir -p atpack
 cd atpack
 rm -rf *
-if [[ ! -f *.atpack ]] ;
-then
-        wget ${ATMEL_ATMEGA_PACK_URL}
-fi
+mv ../*.atpack .
 
 mv ${ATMEL_ATMEGA_PACK_FILENAME}.atpack ${ATMEL_ATMEGA_PACK_FILENAME}.zip
 unzip ${ATMEL_ATMEGA_PACK_FILENAME}.zip
@@ -134,6 +132,8 @@ awk '/iom3000.h/ { print; print "_DEFINITION"; print "_HEADER"; next }1' ../objd
 done
 
 cd ..
+
+fi
 
 # if producing a windows build, compress as zip and
 # copy *toolchain-precompiled* content to any folder containing a .exe
