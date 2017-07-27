@@ -36,7 +36,7 @@ done
 SPECS_FOLDERS=`ls gcc/dev`
 mkdir temp
 for folder in $SPECS_FOLDERS; do
-  cp -r gcc/dev/i${folder}/* temp/
+  cp -r gcc/dev/${folder}/* temp/
 done
 
 # 3 - find different files (device-specs)
