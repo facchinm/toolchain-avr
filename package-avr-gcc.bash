@@ -120,8 +120,18 @@ for x in $EXTRA_LIBS; do
 cp -r temp/${x} ../objdir/avr/lib/${x}
 done
 
-# 4 - extract the correct includes and add them to io.h 
+# 4 - extract the correct includes and add them to io.h
 # ARGH! difficult!
+for x in $EXTRA_SPECS; do
+DEFINITION=`cat ../objdir/lib/gcc/avr/${GCC_VERSION}/device-specs/${x} | grep __AVR_DEVICE_NAME__ | cut -f1 -d" " | cut -f2 -d"D"`
+FANCY_NAME=`cat ../objdir/lib/gcc/avr/${GCC_VERSION}/device-specs/${x} | grep __AVR_DEVICE_NAME__ | cut -f2 -d"="`
+LOWERCASE_DEFINITION="${DEFINITION,,}"
+HEADER_TEMP="${LOWERCASE_DEFINITION#__avr_atmega}"
+HEADER="${HEADER_TEMP%__}"
+_DEFINITION="#elif defined (${DEFINITION})"
+_HEADER="#   include <avr/iom${HEADER}.h>"
+awk '/iom3000.h/ { print; print "_DEFINITION"; print "_HEADER"; next }1' ../objdir/avr/include/avr/io.h | sed "s/_DEFINITION/$_DEFINITION/g" |  sed "s@_HEADER@$_HEADER@g" > ../objdir/avr/include/avr/io.h
+done
 
 cd ..
 
