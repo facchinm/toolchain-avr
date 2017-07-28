@@ -81,7 +81,7 @@ rm -rf toolsdir objdir *-build
 
 rm -rf objdir/{info,man,share}
 
-if [[ -f *.atpack ]] ; then
+if [[ -f ${ATMEL_ATMEGA_PACK_FILENAME}.atpack ]] ; then
 #add extra files from atpack (only if the package is altrady there)
 ./atpack.build.bash
 fi
