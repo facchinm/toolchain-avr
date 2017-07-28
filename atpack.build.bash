@@ -53,8 +53,10 @@ rm -rf temp/device-specs
 
 EXTRA_LIBS=`diff -r -q ../objdir/avr/lib temp/ | grep "Only in" | grep temp | cut -f4 -d" "`
 for x in $EXTRA_LIBS; do
-  LOCATION=`find temp | grep ${x}`
-  cp -r ${LOCATION} ../objdir/avr/lib/${x}
+  cd temp
+  LOCATION=`find . | grep ${x}`
+  cd ..
+  cp -r temp/${LOCATION} ../objdir/avr/lib/${LOCATION}
 done
 
 # 4 - extract the correct includes and add them to io.h
@@ -68,7 +70,7 @@ for x in $ALL_DEVICE_SPECS; do
   _DEFINITION="#elif defined (${DEFINITION})"
   _HEADER="#  include <avr/iom${HEADER}.h>"
   if [ "$(grep -c "${DEFINITION}" ../objdir/avr/include/avr/io.h)" == 0 ]; then
-    NEWFILE=`awk '/iom3000.h/ { print; print "_DEFINITION"; print "_HEADER"; next }1' ../objdir/avr/include/avr/io.h | sed "s/_DEFINITION/$_DEFINITION/g" |  sed "s@_HEADER@$_HEADER@g"`
+    NEWFILE=`awk '/iom3000.h/ { print; print "____DEFINITION____"; print "____HEADER____"; next }1' ../objdir/avr/include/avr/io.h | sed "s/____DEFINITION____/$_DEFINITION/g" |  sed "s@____HEADER____@$_HEADER@g"`
     echo "$NEWFILE" > ../objdir/avr/include/avr/io.h
   fi
 done
